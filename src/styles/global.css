@@ -252,3 +252,18 @@ select.form-control {
   box-shadow: var(--shadow-lg);
   transform: translateY(-4px);
 }
+
+/* Logo Styling */
+.header-logo-img {
+  height: 2.25rem;
+  width: auto;
+  display: block;
+}
+
+.footer-logo-img {
+  height: 2.25rem;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+

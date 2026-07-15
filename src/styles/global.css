@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Outfit:wght@100..900&display=swap');
-
 /* CSS Variables & Design Tokens */
 :root {
   /* Fonts */
@@ -99,6 +97,30 @@ a {
   transition: color var(--transition-fast);
 }
 
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  z-index: 1000;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-family: var(--font-display);
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 /* Layout Utilities */
 .container {
   width: 100%;
@@ -119,6 +141,7 @@ a {
 .section {
   padding-top: var(--spacing-xl);
   padding-bottom: var(--spacing-xl);
+  scroll-margin-top: 6.5rem;
 }
 
 @media (min-width: 768px) {
@@ -244,13 +267,6 @@ select.form-control {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
-  transition: border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
-}
-
-.card:hover {
-  border-color: var(--color-brand);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
 }
 
 /* Logo Styling */
@@ -267,3 +283,19 @@ select.form-control {
   filter: brightness(0) invert(1);
 }
 
+
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

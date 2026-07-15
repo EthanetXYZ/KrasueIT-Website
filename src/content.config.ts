@@ -13,6 +13,7 @@ const caseStudies = defineCollection({
     approach: z.string(),
     outcome: z.string(),
     featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
   })
 });
 

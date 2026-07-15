@@ -90,26 +90,27 @@ const { title, description } = Astro.props;
         display: none;
       }
 
-      .header-cta-mobile {
+      .header-cta-mobile,
+      .nav-overlay {
         display: none;
       }
 
-      /* Mobile Menu Toggle (CSS Only) */
-      .nav-toggle-input {
-        display: none;
-      }
-
-      .nav-toggle-label {
+      /* Mobile Menu Toggle */
+      .nav-toggle-button {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 1.5rem;
-        height: 1.15rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0.8rem 0.65rem;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background: transparent;
         cursor: pointer;
         z-index: 110;
       }
 
-      .nav-toggle-label span {
+      .nav-toggle-button span {
         display: block;
         height: 2px;
         width: 100%;
@@ -119,7 +120,7 @@ const { title, description } = Astro.props;
       }
 
       @media (min-width: 768px) {
-        .nav-toggle-label {
+        .nav-toggle-button {
           display: none;
         }
 
@@ -163,19 +164,23 @@ const { title, description } = Astro.props;
         }
 
         /* Toggle Menu State */
-        .nav-toggle-input:checked ~ nav {
+        body.nav-open {
+          overflow: hidden;
+        }
+
+        body.nav-open nav {
           right: 0;
         }
 
-        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(1) {
+        .nav-toggle-button[aria-expanded="true"] span:nth-child(1) {
           transform: translateY(7px) rotate(45deg);
         }
 
-        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(2) {
+        .nav-toggle-button[aria-expanded="true"] span:nth-child(2) {
           opacity: 0;
         }
 
-        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(3) {
+        .nav-toggle-button[aria-expanded="true"] span:nth-child(3) {
           transform: translateY(-7px) rotate(-45deg);
         }
 
@@ -183,16 +188,17 @@ const { title, description } = Astro.props;
         .nav-overlay {
           display: none;
           position: fixed;
-          top: 0;
-          left: 0;
+          inset: 0;
           width: 100vw;
           height: 100vh;
+          border: 0;
           background-color: rgba(15, 23, 42, 0.3);
           backdrop-filter: blur(4px);
+          cursor: pointer;
           z-index: 102;
         }
 
-        .nav-toggle-input:checked ~ .nav-overlay {
+        body.nav-open .nav-overlay {
           display: block;
         }
 
@@ -312,35 +318,39 @@ const { title, description } = Astro.props;
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <header>
       <div class="container header-container">
-        <a href="/" class="logo" aria-label="Krause IT Homepage">
+        <a href="/" class="logo" aria-label="Krause IT home page">
           <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="header-logo-img" height="36" />
         </a>
 
-        <!-- Checkbox for CSS-only navigation toggle -->
-        <input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
-        
-        <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
+        <button
+          type="button"
+          id="nav-toggle"
+          class="nav-toggle-button"
+          aria-label="Open navigation menu"
+          aria-controls="primary-navigation"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
 
-        <!-- Overlay backdrop for mobile menu -->
-        <label for="nav-toggle" class="nav-overlay" aria-hidden="true"></label>
+        <button type="button" class="nav-overlay" aria-label="Close navigation menu"></button>
 
-        <nav>
+        <nav id="primary-navigation" aria-label="Primary navigation">
           <ul class="nav-links">
             <li><a href="#consulting" class="nav-link">Consulting</a></li>
             <li><a href="#web-services" class="nav-link">Web Services</a></li>
             <li><a href="#approach" class="nav-link">Approach</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
           </ul>
-          <a href="#contact" class="btn btn-primary btn-sm header-cta-mobile">Book a consultation</a>
+          <a href="#contact" class="btn btn-primary btn-sm header-cta-mobile">Discuss your project</a>
         </nav>
 
-        <a href="#contact" class="btn btn-primary header-cta">Book a consultation</a>
+        <a href="#contact" class="btn btn-primary header-cta">Discuss your project</a>
       </div>
     </header>
 
@@ -355,30 +365,66 @@ const { title, description } = Astro.props;
             <div class="footer-logo">
               <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="footer-logo-img" height="36" />
             </div>
-            <p>Leading large-scale IT infrastructure, network, and systems change for schools and businesses.</p>
+            <p>Delivering complex IT infrastructure, network, and systems change for schools and businesses across Australia.</p>
           </div>
           <div class="footer-links">
             <div class="footer-link-group">
               <h4>Services</h4>
               <ul class="footer-link-list">
                 <li><a href="#consulting" class="footer-link">Consulting</a></li>
-                <li><a href="#web-services" class="footer-link">Web Hosting & Dev</a></li>
+                <li><a href="#web-services" class="footer-link">Web Hosting & Design</a></li>
               </ul>
             </div>
             <div class="footer-link-group">
               <h4>Company</h4>
               <ul class="footer-link-list">
                 <li><a href="#approach" class="footer-link">Our Approach</a></li>
-                <li><a href="#contact" class="footer-link">Contact Us</a></li>
+                <li><a href="#contact" class="footer-link">Contact</a></li>
               </ul>
             </div>
           </div>
         </div>
         <div class="footer-bottom">
-          <p class="footer-geo">Serving schools and businesses across Perth and the South-West.</p>
+          <p class="footer-geo">Australia-wide remote support. On-site across Perth and the South West.</p>
           <p>&copy; {new Date().getFullYear()} Krause IT. All rights reserved.</p>
         </div>
       </div>
     </footer>
+    <script>
+      const toggle = document.querySelector('#nav-toggle');
+      const navigation = document.querySelector('#primary-navigation');
+      const overlay = document.querySelector('.nav-overlay');
+      const mobileMenu = window.matchMedia('(max-width: 767px)');
+
+      const setNavigationState = (isOpen) => {
+        document.body.classList.toggle('nav-open', isOpen);
+        toggle?.setAttribute('aria-expanded', String(isOpen));
+        toggle?.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+
+        if (navigation instanceof HTMLElement) {
+          navigation.toggleAttribute('inert', mobileMenu.matches && !isOpen);
+        }
+      };
+
+      const closeNavigation = () => setNavigationState(false);
+
+      toggle?.addEventListener('click', () => {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        setNavigationState(!isOpen);
+      });
+
+      overlay?.addEventListener('click', closeNavigation);
+      navigation?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNavigation));
+      mobileMenu.addEventListener('change', closeNavigation);
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && document.body.classList.contains('nav-open')) {
+          closeNavigation();
+          toggle?.focus();
+        }
+      });
+
+      setNavigationState(false);
+    </script>
   </body>
 </html>

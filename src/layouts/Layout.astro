@@ -1,0 +1,413 @@
+---
+import BaseSEO from '../components/BaseSEO.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseSEO title={title} description={description} />
+    <style>
+      /* Layout specific styles */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--color-border);
+        transition: background-color var(--transition-fast);
+      }
+
+      .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 5rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+        color: var(--color-text-main);
+      }
+
+      .logo-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        background-color: var(--color-brand);
+        border-radius: var(--radius-sm);
+        display: inline-block;
+        position: relative;
+      }
+
+      .logo-icon::after {
+        content: '';
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        width: 50%;
+        height: 50%;
+        border-top: 2px solid white;
+        border-right: 2px solid white;
+      }
+
+      /* Navigation Menu */
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-link {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        position: relative;
+        padding: 0.25rem 0;
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--color-brand);
+        transition: width var(--transition-normal);
+      }
+
+      .nav-link:hover {
+        color: var(--color-text-main);
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .header-cta-mobile {
+        display: none;
+      }
+
+      /* Mobile Menu Toggle (CSS Only) */
+      .nav-toggle-input {
+        display: none;
+      }
+
+      .nav-toggle-label {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 1.5rem;
+        height: 1.15rem;
+        cursor: pointer;
+        z-index: 110;
+      }
+
+      .nav-toggle-label span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background-color: var(--color-text-main);
+        border-radius: 9px;
+        transition: transform var(--transition-normal), opacity var(--transition-normal);
+      }
+
+      @media (min-width: 768px) {
+        .nav-toggle-label {
+          display: none;
+        }
+
+        .header-cta {
+          display: inline-flex;
+          padding: 0.6rem 1.25rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 767px) {
+        nav {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 80%;
+          max-width: 320px;
+          height: 100vh;
+          background-color: var(--color-bg-main);
+          box-shadow: var(--shadow-xl);
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          padding: 7rem 2rem var(--spacing-lg);
+          gap: 3rem;
+          transition: right var(--transition-normal);
+          z-index: 105;
+          border-left: 1px solid var(--color-border);
+        }
+
+        .nav-links {
+          flex-direction: column;
+          width: 100%;
+          gap: 1.75rem;
+        }
+
+        .nav-link {
+          font-size: 1.2rem;
+          display: block;
+          width: 100%;
+        }
+
+        /* Toggle Menu State */
+        .nav-toggle-input:checked ~ nav {
+          right: 0;
+        }
+
+        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+
+        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .nav-toggle-input:checked ~ .nav-toggle-label span:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Overlay blur background */
+        .nav-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: rgba(15, 23, 42, 0.3);
+          backdrop-filter: blur(4px);
+          z-index: 102;
+        }
+
+        .nav-toggle-input:checked ~ .nav-overlay {
+          display: block;
+        }
+
+        .header-cta-mobile {
+          display: inline-flex;
+          width: 100%;
+          margin-top: var(--spacing-sm);
+        }
+      }
+
+      /* Footer Styling */
+      footer {
+        background-color: var(--color-bg-dark);
+        color: var(--color-text-light);
+        padding-top: var(--spacing-xl);
+        padding-bottom: var(--spacing-lg);
+        border-top: 1px solid var(--color-border-dark);
+      }
+
+      .footer-top {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      @media (min-width: 768px) {
+        .footer-top {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+      }
+
+      .footer-brand {
+        max-width: 320px;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.35rem;
+        color: var(--color-text-light);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .footer-logo .logo-icon {
+        background-color: var(--color-text-light);
+      }
+
+      .footer-logo .logo-icon::after {
+        border-top: 2px solid var(--color-bg-dark);
+        border-right: 2px solid var(--color-bg-dark);
+      }
+
+      .footer-brand p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.95rem;
+      }
+
+      .footer-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+      }
+
+      @media (min-width: 768px) {
+        .footer-links {
+          gap: var(--spacing-xl);
+        }
+      }
+
+      .footer-link-group h4 {
+        color: var(--color-text-light);
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .footer-link-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+
+      .footer-link {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .footer-link:hover {
+        color: var(--color-text-light);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--color-border-dark);
+        padding-top: var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      @media (min-width: 768px) {
+        .footer-bottom {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+
+      .footer-geo {
+        font-style: normal;
+        color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-container">
+        <a href="/" class="logo" aria-label="Krause IT Homepage">
+          <span class="logo-icon" aria-hidden="true"></span>
+          <span>KRAUSE IT</span>
+        </a>
+
+        <!-- Checkbox for CSS-only navigation toggle -->
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
+        
+        <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+
+        <!-- Overlay backdrop for mobile menu -->
+        <label for="nav-toggle" class="nav-overlay" aria-hidden="true"></label>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#consulting" class="nav-link">Consulting</a></li>
+            <li><a href="#web-services" class="nav-link">Web Services</a></li>
+            <li><a href="#approach" class="nav-link">Approach</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+          </ul>
+          <a href="#contact" class="btn btn-primary btn-sm header-cta-mobile">Book a consultation</a>
+        </nav>
+
+        <a href="#contact" class="btn btn-primary header-cta">Book a consultation</a>
+      </div>
+    </header>
+
+    <main id="content">
+      <slot />
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <span class="logo-icon"></span>
+              <span>KRAUSE IT</span>
+            </div>
+            <p>Leading large-scale IT infrastructure, network, and systems change for schools and businesses.</p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-link-group">
+              <h4>Services</h4>
+              <ul class="footer-link-list">
+                <li><a href="#consulting" class="footer-link">Consulting</a></li>
+                <li><a href="#web-services" class="footer-link">Web Hosting & Dev</a></li>
+              </ul>
+            </div>
+            <div class="footer-link-group">
+              <h4>Company</h4>
+              <ul class="footer-link-list">
+                <li><a href="#approach" class="footer-link">Our Approach</a></li>
+                <li><a href="#contact" class="footer-link">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-geo">Serving schools and businesses across Perth and the South-West.</p>
+          <p>&copy; {new Date().getFullYear()} Krause IT. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -12,6 +12,7 @@ We have successfully built a clean, premium, and SEO-optimized marketing website
 4. **CSS-Only Mobile Navigation**: Built a fully responsive header in `src/layouts/Layout.astro` that requires zero JavaScript for the mobile dropdown menu toggle, ensuring maximum performance.
 5. **Netlify Form Integration**: Form fields configured in `src/pages/index.astro` using semantic markup and `data-netlify="true"` for automated Netlify submission capture.
 6. **Automated Sitemap Generation**: Configured `@astrojs/sitemap` to output a sitemap on every production build.
+7. **Brand Assets Integration**: Configured the site favicon to use your transparent brand icon and incorporated your transparent logo in the header and footer (with automatic contrast inversion for the dark footer).
 
 ---
 

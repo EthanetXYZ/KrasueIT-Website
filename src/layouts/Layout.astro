@@ -37,32 +37,12 @@ const { title, description } = Astro.props;
       .logo {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-family: var(--font-display);
-        font-weight: 800;
-        font-size: 1.35rem;
-        letter-spacing: -0.02em;
-        color: var(--color-text-main);
       }
 
-      .logo-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        background-color: var(--color-brand);
-        border-radius: var(--radius-sm);
-        display: inline-block;
-        position: relative;
-      }
-
-      .logo-icon::after {
-        content: '';
-        position: absolute;
-        top: 25%;
-        left: 25%;
-        width: 50%;
-        height: 50%;
-        border-top: 2px solid white;
-        border-right: 2px solid white;
+      .header-logo-img {
+        height: 2.25rem;
+        width: auto;
+        display: block;
       }
 
       /* Navigation Menu */
@@ -254,21 +234,14 @@ const { title, description } = Astro.props;
       .footer-logo {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-family: var(--font-display);
-        font-weight: 800;
-        font-size: 1.35rem;
-        color: var(--color-text-light);
         margin-bottom: var(--spacing-sm);
       }
 
-      .footer-logo .logo-icon {
-        background-color: var(--color-text-light);
-      }
-
-      .footer-logo .logo-icon::after {
-        border-top: 2px solid var(--color-bg-dark);
-        border-right: 2px solid var(--color-bg-dark);
+      .footer-logo-img {
+        height: 2.25rem;
+        width: auto;
+        display: block;
+        filter: brightness(0) invert(1);
       }
 
       .footer-brand p {
@@ -342,8 +315,7 @@ const { title, description } = Astro.props;
     <header>
       <div class="container header-container">
         <a href="/" class="logo" aria-label="Krause IT Homepage">
-          <span class="logo-icon" aria-hidden="true"></span>
-          <span>KRAUSE IT</span>
+          <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="header-logo-img" />
         </a>
 
         <!-- Checkbox for CSS-only navigation toggle -->
@@ -381,8 +353,7 @@ const { title, description } = Astro.props;
         <div class="footer-top">
           <div class="footer-brand">
             <div class="footer-logo">
-              <span class="logo-icon"></span>
-              <span>KRAUSE IT</span>
+              <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="footer-logo-img" />
             </div>
             <p>Leading large-scale IT infrastructure, network, and systems change for schools and businesses.</p>
           </div>

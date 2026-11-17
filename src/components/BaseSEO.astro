@@ -1,45 +1,88 @@
 ---
+interface Offer {
+  name: string;
+  description: string;
+  price: number;
+  unit?: 'MON';
+}
+
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  noindex?: boolean;
+  offers?: Offer[];
 }
 
 const {
-  title = "Krause IT — Strategic IT Consulting & Infrastructure Change",
-  description = "Perth-based IT consultancy delivering complex systems, network, and infrastructure change for schools and businesses across Australia.",
-  ogImage = "/KrauseIT_Social.png"
+  title = "Krause IT — Websites, Hosting & Domains for Small Businesses",
+  description = "Website design, hosting and domain management for small businesses, sole traders and community groups. Clear starting prices, fully remote, Australia-wide.",
+  ogImage = "/KrauseIT_Social.png",
+  noindex = false,
+  offers = []
 } = Astro.props;
 
+const siteURL = new URL("/", Astro.site).toString();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "Krause IT",
-  url: new URL("/", Astro.site).toString(),
-  logo: new URL("/KrauseIT_Logo_Transparent.png", Astro.site).toString(),
-  image: new URL(ogImage, Astro.site).toString(),
-  email: "hello@krauseit.com.au",
-  description,
-  areaServed: [
+  "@graph": [
     {
-      "@type": "Country",
-      name: "Australia"
+      "@type": "WebSite",
+      "@id": `${siteURL}#website`,
+      url: siteURL,
+      name: "Krause IT",
+      inLanguage: "en-AU",
+      publisher: { "@id": `${siteURL}#organization` }
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteURL}#organization`,
+      name: "Krause IT",
+      url: siteURL,
+      logo: new URL("/icon-512.png", Astro.site).toString(),
+      image: ogImageURL.toString(),
+      email: "hello@krauseit.com.au",
+      description,
+      founder: {
+        "@type": "Person",
+        name: "Ethan Krause",
+        jobTitle: "Web Developer & Systems Administrator"
+      },
+      areaServed: { "@type": "Country", name: "Australia" },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Perth",
+        addressRegion: "WA",
+        addressCountry: "AU"
+      },
+      serviceType: [
+        "Website design",
+        "Website development",
+        "Web hosting",
+        "Domain management",
+        "Website maintenance",
+        "IT consulting"
+      ],
+      ...(offers.length > 0 && {
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Website packages",
+          itemListElement: offers.map((offer) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: offer.name, description: offer.description },
+            priceSpecification: {
+              "@type": offer.unit ? "UnitPriceSpecification" : "PriceSpecification",
+              minPrice: offer.price,
+              priceCurrency: "AUD",
+              ...(offer.unit && { unitCode: offer.unit })
+            }
+          }))
+        }
+      })
     }
-  ],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Perth",
-    addressRegion: "WA",
-    addressCountry: "AU"
-  },
-  serviceType: [
-    "IT consulting",
-    "Infrastructure modernisation",
-    "Network consulting",
-    "Systems migration",
-    "Project delivery",
-    "Web hosting and design"
   ]
 };
 ---
@@ -47,42 +90,44 @@ const structuredData = {
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" type="image/png" href="/KrauseIT_Icon_Transparent.png" />
 <meta name="generator" content={Astro.generator} />
+{noindex && <meta name="robots" content="noindex" />}
+
+<!-- Icons -->
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#0b1120" />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
-<meta name="title" content={title} />
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="Krause IT" />
+<meta property="og:locale" content="en_AU" />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(ogImage, Astro.site)} />
+<meta property="og:image" content={ogImageURL} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Krause IT — strategic IT consulting and project delivery" />
+<meta property="og:image:alt" content="Krause IT — website design, hosting and domains" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:url" content={canonicalURL} />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
-<meta name="twitter:image:alt" content="Krause IT — strategic IT consulting and project delivery" />
-
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Outfit:wght@100..900&display=swap" />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image:alt" content="Krause IT — website design, hosting and domains" />
 
 <!-- Sitemap Link -->
 <link rel="sitemap" href="/sitemap-index.xml" />
 
 <!-- Structured Data -->
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+{!noindex && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}

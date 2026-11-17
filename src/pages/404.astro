@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SimpleMessage from '../components/SimpleMessage.astro';
+---
+
+<Layout
+  title="Page not found — Krause IT"
+  description="The page you were looking for could not be found."
+  noindex
+>
+  <SimpleMessage eyebrow="404" heading="That page doesn't exist.">
+    <p>The link may be out of date, or the address may have been mistyped. Everything about Krause IT is on the home page.</p>
+  </SimpleMessage>
+</Layout>

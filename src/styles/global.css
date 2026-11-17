@@ -1,8 +1,8 @@
 /* CSS Variables & Design Tokens */
 :root {
   /* Fonts */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit Variable', 'Outfit', system-ui, -apple-system, sans-serif;
 
   /* Color Palette */
   --color-brand: hsl(222, 90%, 54%); /* Cobalt Blue */

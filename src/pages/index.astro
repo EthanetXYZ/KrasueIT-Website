@@ -1,367 +1,454 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 
-const caseStudies = (await getCollection('case-studies')).filter((study) => !study.data.draft);
+// ── Edit prices here ─────────────────────────────────────────────
+// All prices are AUD "from" prices; they feed the packages section and structured data.
+const pricing = {
+  starter: 750,   // one-page site
+  business: 1500, // up to 5 pages
+  hosting: 30,    // per month, required
+  care: 60,       // per month, optional (includes hosting)
+};
+// ─────────────────────────────────────────────────────────────────
+
+const fmt = (n: number) => `$${n.toLocaleString('en-AU')}`;
+
+const work = [
+  {
+    name: 'Dana Krause Sleep Coaching',
+    sector: 'Sole trader · Coaching',
+    blurb: 'A calm, warm site for a sleep coach supporting families with children aged 0–4, built around booking a free consult.',
+    url: 'https://danakrause.com',
+    image: '/work/danakrause.com.webp',
+  },
+  {
+    name: 'Team McQueen — Car 95',
+    sector: 'Charity · Variety WA Bash',
+    blurb: 'A bold fundraising site for a Variety WA Bash team, with donations, sponsorship and the story of the car.',
+    url: 'https://bashcar95.org',
+    image: '/work/bashcar95.org.webp',
+  },
+  {
+    name: 'On Point Events',
+    sector: 'Events · MC services',
+    blurb: 'A professional single-page site for an events business and MC.',
+    url: null,
+    image: null,
+  },
+  {
+    name: 'Courtney Turner Remedial Massage',
+    sector: 'Health · Aveley, WA',
+    blurb: 'A booking-focused site for a home-clinic remedial massage therapist.',
+    url: null,
+    image: null,
+  },
+];
+
+const builds = [
+  {
+    id: 'starter',
+    amount: pricing.starter,
+    name: 'Starter site',
+    price: fmt(pricing.starter),
+    unit: 'one-off',
+    summary: 'A polished one-page website that tells people what you do and gets them in touch.',
+    features: ['Single-page design', 'Mobile-friendly and fast', 'Contact or enquiry form', 'Basic SEO and Google-ready setup', 'Yours to keep, hosted wherever you like'],
+  },
+  {
+    id: 'business',
+    amount: pricing.business,
+    name: 'Business site',
+    price: fmt(pricing.business),
+    unit: 'one-off',
+    summary: 'Room to explain your services properly, with separate pages people can find on Google.',
+    features: ['Up to 5 pages', 'Everything in Starter', 'Service, about and contact pages', 'Page-by-page SEO setup', 'Yours to keep, hosted wherever you like'],
+    featured: true,
+  },
+];
+
+const plans = [
+  {
+    id: 'hosting',
+    amount: pricing.hosting,
+    name: 'Hosting',
+    price: fmt(pricing.hosting),
+    unit: '/month',
+    summary: 'Keeps your site online, secure and backed up, so you never have to think about it.',
+    features: ['Australian-based hosting', 'Free SSL certificate', 'Daily backups', 'Uptime monitoring', 'Security and software updates', 'Domain and DNS management'],
+  },
+  {
+    id: 'care',
+    amount: pricing.care,
+    name: 'Care plan',
+    price: fmt(pricing.care),
+    unit: '/month',
+    summary: 'Hosting plus someone to make your changes for you.',
+    features: ['Everything in Hosting', 'Up to 30 minutes of content changes each month', 'Priority support'],
+  },
+];
+
+const extras = [
+  { id: 'email', name: 'Business email', summary: 'Professional email like you@yourbusiness.com.au' },
+  { id: 'domain', name: 'Domain registration', summary: 'Register a new .com.au or .com domain' },
+  { id: 'dns', name: 'Connect my existing domain', summary: 'DNS set up for a domain you already own' },
+  { id: 'migrate', name: 'Move my existing site', summary: 'Bring your current website across' },
+  { id: 'pages', name: 'Extra pages', summary: 'More pages than your package includes' },
+];
+
+const offers = [
+  { name: 'Starter site', description: 'One-page small business website', price: pricing.starter },
+  { name: 'Business site', description: 'Small business website, up to 5 pages', price: pricing.business },
+  { name: 'Hosting', description: 'Website hosting, SSL, backups, monitoring and security updates', price: pricing.hosting, unit: 'MON' as const },
+  { name: 'Care plan', description: 'Hosting plus monthly content changes and priority support', price: pricing.care, unit: 'MON' as const },
+];
+
+const faqs = [
+  {
+    q: 'Who owns my website?',
+    a: 'You do. Once your site is paid for, the website and its content belong to you, and your domain is yours too. If you ever want to move to another host or developer, you get everything you need to take it with you. No lock-in contracts, no exit fees.',
+  },
+  {
+    q: 'Do I have to host with Krause IT?',
+    a: 'No. Hosting is optional. Most clients choose it because it keeps everything in one place, with backups, security updates and monitoring handled for them. If you would rather use your own hosting, your site can be set up there instead.',
+  },
+  {
+    q: "What's the difference between Hosting and the Care plan?",
+    a: 'Hosting keeps your site running and secure. The Care plan includes everything in Hosting, plus up to 30 minutes of content changes each month, such as new photos, updated prices or a new announcement, and priority support.',
+  },
+  {
+    q: 'I already have a domain name. Can I keep it?',
+    a: 'Yes. Your existing domain can be connected to your new site, or moved across so it is managed alongside your hosting and never accidentally expires.',
+  },
+  {
+    q: 'Can you move or rebuild my existing website?',
+    a: 'Yes. Moving an existing site is available as an add-on, and a rebuild is quoted the same way as a new site. Tell us what you have now in the form below.',
+  },
+  {
+    q: 'Do you only work with businesses in Perth?',
+    a: 'No. Everything is done remotely, so it works the same wherever you are in Australia. Most of the process happens over email and a quick call or two.',
+  },
+  {
+    q: 'What do I need to get started?',
+    a: 'A rough idea of what you want people to know and do, plus your logo and any photos you have. Not sure what to write? That is fine. Help with wording is part of the process.',
+  },
+];
 ---
 
-<Layout 
-  title="Krause IT — Strategic IT Consulting & Infrastructure Change"
-  description="Perth-based IT consultancy delivering complex systems, network, and infrastructure change for schools and businesses across Australia."
->
-  <!-- Hero Section -->
+<Layout offers={offers}>
+  <!-- Hero -->
   <section id="top" class="hero-section">
     <div class="container hero-container">
       <div class="hero-content">
-        <span class="badge badge-brand">IT Consulting & Projects</span>
-        <h1>IT change, done properly.</h1>
+        <span class="badge badge-brand">Websites · Hosting · Domains</span>
+        <h1>Your website, done properly.</h1>
         <p class="hero-subhead">
-          Strategic IT consulting for schools and businesses navigating major technology change. Led by an experienced systems administrator providing remote advisory and implementation support Australia-wide, with on-site availability across Perth and the South West.
+          Krause IT designs, builds and hosts websites for small businesses, sole traders and community groups. One person looks after your site, hosting and domain, backed by a systems administrator's know-how. You own your website, with no lock-in. Fully remote, Australia-wide.
         </p>
         <div class="hero-actions">
-          <a href="#contact" class="btn btn-primary">Discuss your project</a>
-          <a href="#approach" class="btn btn-secondary">See how we work</a>
+          <a href="#packages" class="btn btn-primary">See packages</a>
+          <a href="#work" class="btn btn-secondary">View recent work</a>
         </div>
       </div>
       <div class="hero-graphics" aria-hidden="true">
-        <!-- Abstract network/grid design representing infrastructure and systems change -->
-        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-svg">
-          <defs>
-            <linearGradient id="gradient-accent" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="var(--color-brand)" />
-              <stop offset="100%" stop-color="hsl(222, 100%, 75%)" />
-            </linearGradient>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(15, 23, 42, 0.04)" stroke-width="1"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-          <circle cx="200" cy="200" r="120" stroke="url(#gradient-accent)" stroke-width="2" stroke-dasharray="4 8" />
-          <circle cx="200" cy="200" r="80" stroke="rgba(37, 99, 235, 0.15)" stroke-width="1.5" />
-          <circle cx="200" cy="200" r="40" fill="rgba(37, 99, 235, 0.05)" />
-          
-          <!-- Node Connections -->
-          <circle cx="200" cy="80" r="6" fill="var(--color-brand)" />
-          <circle cx="290" cy="140" r="5" fill="var(--color-brand)" />
-          <circle cx="270" cy="280" r="7" fill="var(--color-brand)" />
-          <circle cx="110" cy="260" r="5" fill="var(--color-brand)" />
-          <circle cx="130" cy="120" r="6" fill="var(--color-brand)" />
-          
-          <line x1="200" y1="80" x2="290" y2="140" stroke="var(--color-brand)" stroke-width="1" opacity="0.4" />
-          <line x1="290" y1="140" x2="270" y2="280" stroke="var(--color-brand)" stroke-width="1" opacity="0.4" />
-          <line x1="270" y1="280" x2="110" y2="260" stroke="var(--color-brand)" stroke-width="1" opacity="0.4" />
-          <line x1="110" y1="260" x2="130" y2="120" stroke="var(--color-brand)" stroke-width="1" opacity="0.4" />
-          <line x1="130" y1="120" x2="200" y2="80" stroke="var(--color-brand)" stroke-width="1" opacity="0.4" />
-
-          <!-- Center connection -->
-          <line x1="200" y1="200" x2="200" y2="80" stroke="var(--color-brand)" stroke-width="1.5" opacity="0.6" />
-          <line x1="200" y1="200" x2="270" y2="280" stroke="var(--color-brand)" stroke-width="1.5" opacity="0.6" />
-          <circle cx="200" cy="200" r="8" fill="var(--color-brand)" />
-        </svg>
+        <div class="browser browser-back">
+          <div class="browser-bar"><span></span><span></span><span></span></div>
+          <img src={work[1].image} alt="" width="960" height="600" />
+        </div>
+        <div class="browser browser-front">
+          <div class="browser-bar"><span></span><span></span><span></span></div>
+          <img src={work[0].image} alt="" width="960" height="600" fetchpriority="high" />
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Who This Is For Section -->
+  <!-- Who it's for -->
   <section class="section who-for-section">
     <div class="container">
-      <div class="audience-layout">
-        <div class="audience-intro">
-          <span class="badge badge-brand">Partnership</span>
-          <h2>For teams where IT decisions affect day-to-day operations.</h2>
-          <p class="section-intro">We work with organisations that need practical technical leadership, not generic support tickets or abstract strategy documents.</p>
+      <div class="audience-intro">
+        <span class="badge badge-brand">Who it's for</span>
+        <h2>For people who'd rather run their business than wrestle with a website.</h2>
+        <p class="section-intro">You get a site that looks the part and brings in enquiries, and someone who handles the technical side for you.</p>
+      </div>
+      <div class="who-grid">
+        <div class="card who-card">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+          </div>
+          <h3>Sole traders & professionals</h3>
+          <p>Coaches, therapists, consultants and event professionals who need a site that builds trust and makes booking easy.</p>
         </div>
-
-        <div class="who-grid">
-          <!-- Schools -->
-          <div class="card who-card">
-            <div class="card-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
-            </div>
-            <h3>Schools</h3>
-            <p>Modernisation backed by real-world experience inside education environments, with awareness of budgets, procurement, compliance, and classroom continuity.</p>
+        <div class="card who-card">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon" aria-hidden="true"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg>
           </div>
-
-          <!-- Businesses -->
-          <div class="card who-card">
-            <div class="card-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-            </div>
-            <h3>Growing Businesses</h3>
-            <p>Support for businesses making technology decisions that affect efficiency, security, service reliability, and future growth.</p>
+          <h3>Small local businesses</h3>
+          <p>Local services and small teams who want a professional web presence without paying agency prices.</p>
+        </div>
+        <div class="card who-card">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </div>
-
-          <!-- IT Teams -->
-          <div class="card who-card">
-            <div class="card-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <h3>IT Teams & Sysadmins</h3>
-            <p>Additional senior capability for projects that need focused planning, implementation support, and practical delivery momentum.</p>
-          </div>
+          <h3>Charities & community groups</h3>
+          <p>Clubs, fundraising teams and not-for-profits that need to share their story and make it easy to donate or get involved.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Consulting Services (Primary) -->
-  <section id="consulting" class="section services-section">
+  <!-- Recent work -->
+  <section id="work" class="section work-section">
     <div class="container">
-      <div class="services-layout">
-        <div class="services-heading">
-          <span class="badge badge-brand">Primary Services</span>
-          <h2>Strategic IT Consulting</h2>
-          <p class="section-intro">Practical technology advice and hands-on technical leadership to help organisations plan, modernise, and implement reliable systems.</p>
-        </div>
-
-        <div>
-          <div class="services-grid">
-            <!-- Service 1 -->
-            <div class="service-item">
-              <div class="service-icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+      <div class="section-heading">
+        <span class="badge badge-brand">Recent work</span>
+        <h2>Sites built for real clients</h2>
+        <p class="section-intro">A few recent projects for sole traders, small businesses and a charity team.</p>
+      </div>
+      <div class="work-grid">
+        {work.map((item) => (
+          <article class:list={['work-card', { 'work-card-soon': !item.url }]}>
+            {item.image ? (
+              <a href={item.url} class="work-thumb" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                <img src={item.image} alt="" width="960" height="600" loading="lazy" />
+              </a>
+            ) : (
+              <div class="work-thumb work-thumb-placeholder" aria-hidden="true">
+                <span>Launching soon</span>
               </div>
-              <div class="service-content">
-                <h3>Infrastructure & Network Overhauls</h3>
-                <p>Assessing, designing, and improving core IT infrastructure, from network architecture and connectivity through to server environments, wireless platforms, and operational systems.</p>
-              </div>
+            )}
+            <div class="work-body">
+              <span class="work-sector">{item.sector}</span>
+              <h3>{item.name}</h3>
+              <p>{item.blurb}</p>
+              {item.url ? (
+                <a href={item.url} class="work-link" target="_blank" rel="noopener">
+                  Visit {item.url.replace('https://', '')}<span class="sr-only"> (opens in a new tab)</span> →
+                </a>
+              ) : (
+                <span class="work-link work-link-muted">Launching soon</span>
+              )}
             </div>
-
-            <!-- Service 2 -->
-            <div class="service-item">
-              <div class="service-icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </div>
-              <div class="service-content">
-                <h3>Platform & System Migrations</h3>
-                <p>Leading complex technology transitions from planning and preparation through to migration, validation, and handover.</p>
-              </div>
-            </div>
-
-            <!-- Service 3 -->
-            <div class="service-item">
-              <div class="service-icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              </div>
-              <div class="service-content">
-                <h3>Systems & Vendor Review</h3>
-                <p>Reviewing existing technology environments and vendor relationships to identify risks, inefficiencies, and opportunities to improve reliability, security, and value.</p>
-              </div>
-            </div>
-
-            <!-- Service 4 -->
-            <div class="service-item">
-              <div class="service-icon-box">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              </div>
-              <div class="service-content">
-                <h3>Project Delivery</h3>
-                <p>Taking ownership of technical projects from planning through to implementation, including stakeholder coordination, change windows, and delivery follow-through.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="services-cta-banner">
-            <div class="services-cta-content">
-              <h3>Planning a significant IT change?</h3>
-              <p>Start with a free 30-minute conversation about your current environment, intended outcome, and the best way forward.</p>
-            </div>
-            <a href="#contact" class="btn btn-primary">Start a conversation</a>
-          </div>
-        </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- Web Hosting & Development (Secondary) -->
-  <section id="web-services" class="section web-services-section">
+  <!-- Packages -->
+  <section id="packages" class="section packages-section">
     <div class="container">
-      <div class="web-services-panel">
-        <div class="web-services-intro">
-          <span class="badge badge-brand">Web Services</span>
-          <h2>Web Hosting & Design</h2>
-          <p>
-            Strategic IT consulting is our primary focus, but we also design, build, and host reliable websites for clients who want a practical, well-supported web presence.
-          </p>
-        </div>
-        
-        <div class="web-services-grid">
-          <div class="web-service-card">
-            <h4>Web Hosting</h4>
-            <p>Hosted on high-speed Australian-based servers, with a free SSL certificate included.</p>
+      <div class="section-heading">
+        <span class="badge badge-brand">Packages</span>
+        <h2>Build your quote</h2>
+        <p class="section-intro">Pick a website, an optional monthly plan and any extras. Not sure? Choose "I don't know" and we'll recommend what fits. The site is yours either way.</p>
+      </div>
+
+      <div class="picker" data-picker>
+        <fieldset class="picker-step">
+          <legend class="package-group-title">1. Choose your website</legend>
+          <div class="package-grid">
+            {builds.map((pkg) => (
+              <label class:list={['package-card', 'option-card', { 'package-card-featured': pkg.featured }]}>
+                <input type="radio" name="pick-site" value={pkg.id} class="option-input" data-label={pkg.name} data-amount={pkg.amount} />
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="package-name">{pkg.name}</span>
+                <span class="package-price"><span class="package-from">from</span> {pkg.price} <span class="package-unit">{pkg.unit}</span></span>
+                <span class="package-summary">{pkg.summary}</span>
+                <ul class="package-features">
+                  {pkg.features.map((f) => <li>{f}</li>)}
+                </ul>
+              </label>
+            ))}
           </div>
-          <div class="web-service-card">
-            <h4>Web Design & Development</h4>
-            <p>Custom-built business websites designed for fast loading, mobile usability, and accessibility.</p>
+          <div class="option-row">
+            <label class="option-chip">
+              <input type="radio" name="pick-site" value="unsure" class="option-input" data-label="I don't know yet" />
+              <span class="option-check" aria-hidden="true"></span>
+              <span><strong>I don't know</strong> <span class="option-chip-note">Tell us about your business and we'll recommend the right fit.</span></span>
+            </label>
           </div>
-          <div class="web-service-card">
-            <h4>Domain Management</h4>
-            <p>Secure management of domain registration, DNS configuration, and renewals to prevent expiry or service disruption.</p>
+        </fieldset>
+
+        <fieldset class="picker-step">
+          <legend class="package-group-title">2. Keep it running <span class="package-group-note">(optional)</span></legend>
+          <div class="package-grid">
+            {plans.map((plan) => (
+              <label class="package-card option-card">
+                <input type="radio" name="pick-plan" value={plan.id} class="option-input" data-label={plan.name} data-amount={plan.amount} data-monthly />
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="package-name">{plan.name}</span>
+                <span class="package-price"><span class="package-from">from</span> {plan.price}<span class="package-unit">{plan.unit}</span></span>
+                <span class="package-summary">{plan.summary}</span>
+                <ul class="package-features">
+                  {plan.features.map((f) => <li>{f}</li>)}
+                </ul>
+              </label>
+            ))}
           </div>
+          <div class="option-row">
+            <label class="option-chip">
+              <input type="radio" name="pick-plan" value="none" class="option-input" data-label="No thanks, I'll host it myself" />
+              <span class="option-check" aria-hidden="true"></span>
+              <span><strong>No thanks</strong> <span class="option-chip-note">I'll host it myself.</span></span>
+            </label>
+            <label class="option-chip">
+              <input type="radio" name="pick-plan" value="unsure" class="option-input" data-label="I don't know yet" />
+              <span class="option-check" aria-hidden="true"></span>
+              <span><strong>I don't know</strong> <span class="option-chip-note">Help me decide.</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="picker-step">
+          <legend class="package-group-title">3. Anything else? <span class="package-group-note">(tick any, quoted separately)</span></legend>
+          <div class="extras-grid">
+            {extras.map((extra) => (
+              <label class="option-chip option-chip-box">
+                <input type="checkbox" name="pick-extra" value={extra.id} class="option-input" data-label={extra.name} />
+                <span class="option-check option-check-box" aria-hidden="true"></span>
+                <span><strong>{extra.name}</strong> <span class="option-chip-note">{extra.summary}</span></span>
+              </label>
+            ))}
+            <label class="option-chip option-chip-box">
+              <input type="checkbox" name="pick-extra" value="unsure" class="option-input" data-label="I don't know, please advise" data-exclusive />
+              <span class="option-check option-check-box" aria-hidden="true"></span>
+              <span><strong>I don't know</strong> <span class="option-chip-note">Not sure what else you need? We'll advise.</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="picker-summary">
+          <div class="picker-summary-text" aria-live="polite">
+            <span class="picker-estimate" data-picker-estimate>Choose your options to see an estimate</span>
+            <span class="picker-detail" data-picker-detail>Prices in AUD. Every quote is confirmed before work starts.</span>
+          </div>
+          <a href="#contact" class="btn btn-primary" data-picker-continue>Continue →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Why Krause IT Section (Credibility) -->
-  <section class="section why-section">
+  <!-- How it works -->
+  <section id="process" class="section approach-section">
+    <div class="container">
+      <div class="section-heading">
+        <span class="badge badge-brand">How it works</span>
+        <h2>From first chat to live site</h2>
+        <p class="section-intro">A simple process that keeps you in the loop without eating up your time.</p>
+      </div>
+      <ol class="approach-steps">
+        <li class="approach-step">
+          <span class="approach-step-marker">1</span>
+          <div>
+            <h3>Quick chat</h3>
+            <p>Tell us about your business, who you want to reach and what you need. You'll get a clear quote before anything starts.</p>
+          </div>
+        </li>
+        <li class="approach-step">
+          <span class="approach-step-marker">2</span>
+          <div>
+            <h3>Design & build</h3>
+            <p>Your site is designed and built around your content, with help on wording and layout where you need it.</p>
+          </div>
+        </li>
+        <li class="approach-step">
+          <span class="approach-step-marker">3</span>
+          <div>
+            <h3>Review & launch</h3>
+            <p>You review the site and request changes. Once you're happy, it goes live on your domain.</p>
+          </div>
+        </li>
+        <li class="approach-step">
+          <span class="approach-step-marker">4</span>
+          <div>
+            <h3>Yours, and looked after</h3>
+            <p>The site is yours. Choose a Hosting or Care plan and the hosting, backups, updates and domain are handled from then on.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Why Krause IT -->
+  <section id="why" class="section why-section">
     <div class="container">
       <div class="why-panel">
         <div class="why-heading">
           <span class="badge badge-brand">Why Krause IT</span>
-          <h2>Practical guidance from someone who also does the work.</h2>
-          <p class="section-intro">Krause IT keeps advice close to implementation. You get clear technical direction, realistic planning, and hands-on delivery grounded in active school and business environments.</p>
+          <h2>A web designer who also knows the tech underneath.</h2>
+          <p class="section-intro">Plenty of people can make a website look good. Krause IT also gets the hosting, domains, DNS and security right, so your site keeps working long after launch.</p>
         </div>
-
         <div class="why-points">
           <div class="why-point">
             <span class="why-point-marker">01</span>
             <div>
-              <h3>Built around real constraints</h3>
-              <p>Recommendations account for budget, procurement, compliance, timing, and the people who need systems to keep working.</p>
+              <h3>You own your website</h3>
+              <p>Your site, content and domain belong to you. Hosting is optional and there are no lock-in contracts, so you stay because the service is good.</p>
             </div>
           </div>
           <div class="why-point">
             <span class="why-point-marker">02</span>
             <div>
-              <h3>Clear decisions, not vague reports</h3>
-              <p>Technical risks, vendor options, and project trade-offs are translated into plain choices that leadership and IT teams can act on.</p>
+              <h3>Fast, mobile-first sites</h3>
+              <p>Built to load quickly and look great on phones, where most of your visitors will find you.</p>
             </div>
           </div>
           <div class="why-point">
             <span class="why-point-marker">03</span>
             <div>
-              <h3>Planning connected to delivery</h3>
-              <p>The person shaping the approach understands implementation detail, so plans stay grounded through assessment, migration, cutover, and validation.</p>
+              <h3>Security and backups handled</h3>
+              <p>Updates, SSL, backups and uptime monitoring are part of every hosting plan, not optional extras.</p>
             </div>
           </div>
           <div class="why-point">
             <span class="why-point-marker">04</span>
             <div>
-              <h3>Local when it matters</h3>
-              <p>Remote support is available Australia-wide, with on-site assessments, stakeholder conversations, and deployment support available across Perth and the South West.</p>
+              <h3>One person, clear pricing</h3>
+              <p>Website, hosting and domain handled by the same person, with a confirmed quote before work begins and no surprise invoices.</p>
             </div>
           </div>
         </div>
-
         <div class="why-note">
-          <span>Led by Ethan Krause</span>
-          <p>Experience across systems administration, education-sector operations, infrastructure modernisation, cloud transitions, and practical project delivery for organisations across Australia.</p>
+          <span>Run by Ethan Krause</span>
+          <p>A systems administrator with over a decade of experience in IT, across schools and businesses, now building and hosting websites for small businesses and community groups across Australia.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- How We Work Section (Approach) -->
-  <section id="approach" class="section approach-section">
-    <div class="container">
-      <div class="approach-panel">
-        <div class="approach-heading">
-          <span class="badge badge-brand">Our Approach</span>
-          <h2>How we work</h2>
-          <p class="section-intro">A clear sequence for turning uncertainty into a practical plan, then moving through delivery with minimal disruption.</p>
-        </div>
-
-        <div class="approach-steps">
-          <div class="approach-step">
-            <span class="approach-step-marker">1</span>
-            <div>
-              <h3>Initial conversation</h3>
-              <p>Understand the challenge, current environment, operational requirements, decision-makers, and intended outcome.</p>
-            </div>
-          </div>
-
-          <div class="approach-step">
-            <span class="approach-step-marker">2</span>
-            <div>
-              <h3>Technical assessment</h3>
-              <p>Review the relevant systems, infrastructure, vendors, risks, and constraints to establish the current position.</p>
-            </div>
-          </div>
-
-          <div class="approach-step">
-            <span class="approach-step-marker">3</span>
-            <div>
-              <h3>Plan and proposal</h3>
-              <p>Develop a practical scope of work, implementation approach, schedule, and clear pricing before work starts.</p>
-            </div>
-          </div>
-
-          <div class="approach-step">
-            <span class="approach-step-marker">4</span>
-            <div>
-              <h3>Hands-on delivery</h3>
-              <p>Complete the technical work, coordinate stakeholders, manage change windows, and communicate progress through to completion.</p>
-            </div>
-          </div>
-        </div>
+  <!-- FAQ -->
+  <section id="faq" class="section faq-section">
+    <div class="container faq-container">
+      <div class="section-heading">
+        <span class="badge badge-brand">FAQ</span>
+        <h2>Common questions</h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((item) => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- Case Studies Section -->
-  {caseStudies.length > 0 && (
-    <section class="section case-studies-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="badge badge-brand">Proven Results</span>
-          <h2>Projects in the field</h2>
-          <p class="section-intro">A look at how we resolve network, infrastructure, and systems transitions for local organisations.</p>
-        </div>
-
-        <div class="case-studies-list">
-          {caseStudies.map((study) => (
-            <article class="case-study-item">
-              <div class="case-study-meta">
-                <span class="case-study-sector">{study.data.sector}</span>
-                <h3>{study.data.title}</h3>
-                <p class="case-study-client">Client: {study.data.client} ({study.data.date})</p>
-                <p class="case-study-summary">{study.data.summary}</p>
-              </div>
-              <div class="case-study-details">
-                <div class="detail-block">
-                  <h5>The Challenge</h5>
-                  <p>{study.data.challenge}</p>
-                </div>
-                <div class="detail-block">
-                  <h5>Our Approach</h5>
-                  <p>{study.data.approach}</p>
-                </div>
-                <div class="detail-block">
-                  <h5>The Outcome</h5>
-                  <p>{study.data.outcome}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-
-  <!-- Contact Section -->
+  <!-- Contact -->
   <section id="contact" class="section contact-section">
     <div class="container">
       <div class="contact-panel">
         <div class="contact-info">
           <span class="badge badge-brand">Contact</span>
-          <h2>Let's talk about your project.</h2>
-          <p>
-            Tell us what needs to change, what is getting in the way, and what a successful outcome looks like. We support remote consulting and project work Australia-wide, with on-site delivery available across Perth and the South West.
-          </p>
-          
+          <h2>Let's get your website sorted.</h2>
+          <p>Tell us a little about your business and what you need. You'll get a reply by email with next steps and a quote.</p>
           <div class="contact-details-box">
             <div class="contact-detail-row">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>Australia-wide remote support</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>Fully remote, Australia-wide</span>
             </div>
             <div class="contact-detail-row">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
-              <span>On-site across Perth & South West WA</span>
-            </div>
-            <div class="contact-detail-row">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               <a href="mailto:hello@krauseit.com.au">hello@krauseit.com.au</a>
             </div>
           </div>
@@ -369,45 +456,58 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
 
         <div class="contact-form-wrapper">
           <div class="contact-form-intro">
-            <h3>Start with the essentials</h3>
-            <p>A few details are enough. We can clarify scope, access, timing, and delivery model in the first conversation.</p>
+            <h3>Start with the basics</h3>
+            <p>A few details are enough. We'll work out the rest together.</p>
           </div>
-
-          <form name="contact-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
-            <!-- Hidden input for Netlify forms -->
+          <form name="contact-form" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
             <input type="hidden" name="form-name" value="contact-form" />
             <p class="sr-only">
               <label>Do not fill this out if you are human: <input name="bot-field" /></label>
             </p>
+            <input type="hidden" name="selections" value="" data-selections-input />
+
+            <div class="form-selections" data-selections hidden>
+              <div class="form-selections-head">
+                <span class="form-label">Your selections</span>
+                <a href="#packages">Change</a>
+              </div>
+              <ul data-selections-list></ul>
+            </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" name="name" autocomplete="name" required class="form-control" placeholder="Who should we contact?" />
+                <input type="text" id="name" name="name" autocomplete="name" required class="form-control" placeholder="Your name" />
               </div>
               <div class="form-group">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" id="email" name="email" autocomplete="email" required class="form-control" placeholder="name@organisation.com.au" />
+                <input type="email" id="email" name="email" autocomplete="email" required class="form-control" placeholder="you@business.com.au" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="business" class="form-label">Business or organisation <span class="form-optional">(optional)</span></label>
+                <input type="text" id="business" name="business" autocomplete="organization" class="form-control" placeholder="Business name" />
+              </div>
+              <div class="form-group">
+                <label for="need" class="form-label">What do you need?</label>
+                <select id="need" name="need" required class="form-control">
+                  <option value="" disabled selected>Choose one</option>
+                  <option value="New website">A new website</option>
+                  <option value="Rebuild or move existing site">Rebuild or move my existing site</option>
+                  <option value="Hosting, domain or email">Hosting, domain or email</option>
+                  <option value="Something else">Something else</option>
+                </select>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="org-type" class="form-label">Organisation</label>
-              <select id="org-type" name="org-type" required class="form-control">
-                <option value="" disabled selected>What best describes you?</option>
-                <option value="School">School / Educational Institution</option>
-                <option value="Business">Business / Commercial Organisation</option>
-                <option value="IT Team">IT Team / Internal Technology Team</option>
-                <option value="Other">Other Organisation</option>
-              </select>
+              <label for="message" class="form-label">Tell us a bit more</label>
+              <textarea id="message" name="message" required class="form-control" rows="5" placeholder="What does your business do, and what should the website help with? Include your current website or domain if you have one."></textarea>
             </div>
 
-            <div class="form-group">
-              <label for="changing" class="form-label">What needs attention?</label>
-              <textarea id="changing" name="changing" required class="form-control" rows="5" placeholder="Briefly describe the project, problem, or decision you are working through. Include location if on-site work may be needed."></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Send project details</button>
+            <button type="submit" class="btn btn-primary btn-block">Send enquiry</button>
           </form>
         </div>
       </div>
@@ -416,45 +516,29 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
 </Layout>
 
 <style>
-  /* Section Header Styles */
-  .section-header {
-    text-align: center;
-    max-width: 650px;
-    margin: 0 auto var(--spacing-xl) auto;
-  }
-
-  .section-header h2 {
-    margin-top: var(--spacing-sm);
-    margin-bottom: var(--spacing-sm);
-  }
-
   .section-intro {
     font-size: 1.15rem;
   }
 
-  /* bg colors */
-  .bg-alt {
-    background-color: var(--color-bg-alt);
+  .section-heading,
+  .audience-intro {
+    max-width: 680px;
+    margin: 0 auto var(--spacing-xl);
+    text-align: center;
   }
 
-  @media (min-width: 768px) {
-    .who-for-section,
-    .services-section,
-    .web-services-section,
-    .why-section,
-    .approach-section,
-    .contact-section {
-      padding-top: var(--spacing-xl);
-      padding-bottom: var(--spacing-xl);
-    }
+  .section-heading h2,
+  .audience-intro h2 {
+    margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
   }
 
-  /* Hero Section styles */
+  /* Hero */
   .hero-section {
     padding-top: var(--spacing-xl);
     padding-bottom: var(--spacing-xl);
     overflow: hidden;
-    background: radial-gradient(circle at 85% 20%, rgba(37, 99, 235, 0.04) 0%, transparent 60%);
+    background: radial-gradient(circle at 85% 20%, rgba(37, 99, 235, 0.06) 0%, transparent 60%);
   }
 
   .hero-container {
@@ -475,7 +559,7 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
   }
 
   .hero-subhead {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     line-height: 1.6;
     margin-bottom: var(--spacing-lg);
   }
@@ -486,11 +570,55 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     gap: var(--spacing-sm);
   }
 
-  .hero-svg {
+  .hero-graphics {
+    position: relative;
+    aspect-ratio: 1.25;
+    max-width: 560px;
     width: 100%;
-    max-width: 400px;
     margin: 0 auto;
+  }
+
+  .browser {
+    position: absolute;
+    width: 82%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-bg-main);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .browser img {
     display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .browser-bar {
+    display: flex;
+    gap: 5px;
+    padding: 8px 10px;
+    background: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .browser-bar span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+  }
+
+  .browser-back {
+    top: 0;
+    right: 0;
+    transform: rotate(2deg);
+    opacity: 0.9;
+  }
+
+  .browser-front {
+    bottom: 0;
+    left: 0;
   }
 
   @media (min-width: 992px) {
@@ -498,29 +626,15 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
       padding-top: var(--spacing-xxl);
       padding-bottom: var(--spacing-xxl);
     }
+
     .hero-container {
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.05fr 0.95fr;
     }
   }
 
-  /* Who This Is For styles */
+  /* Who it's for */
   .who-for-section {
     background-color: var(--color-bg-alt);
-  }
-
-  .audience-layout {
-    display: block;
-  }
-
-  .audience-intro {
-    max-width: 660px;
-    margin: 0 auto var(--spacing-xl);
-    text-align: center;
-  }
-
-  .audience-intro h2 {
-    margin-top: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
   }
 
   .who-grid {
@@ -535,16 +649,7 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     }
   }
 
-  @media (min-width: 992px) {
-    .who-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
   .who-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     box-shadow: var(--shadow-sm);
   }
 
@@ -567,162 +672,504 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
 
   .who-card h3 {
     margin-bottom: var(--spacing-xs);
-    font-size: 1.35rem;
+    font-size: 1.3rem;
   }
 
-  /* Services Grid styles */
-  .services-layout {
-    display: block;
-  }
-
-  .services-heading {
-    max-width: 680px;
-    margin: 0 auto var(--spacing-xl);
-    text-align: center;
-  }
-
-  .services-heading h2 {
-    margin-top: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
-  }
-
-  .services-grid {
+  /* Recent work */
+  .work-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
   }
 
   @media (min-width: 768px) {
-    .services-grid {
+    .work-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  .service-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-lg);
+  .work-card {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-main);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-bg-main);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-normal), transform var(--transition-normal);
   }
 
-  .service-icon-box {
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-brand-light);
-    color: var(--color-brand);
+  .work-card:not(.work-card-soon):hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-3px);
+  }
+
+  .work-thumb {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .work-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .work-thumb-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 0.25rem;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 32px 32px,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 32px 32px,
+      var(--color-bg-dark);
   }
 
-  .service-icon-box svg {
-    width: 1.35rem;
-    height: 1.35rem;
+  .work-thumb-placeholder span {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(213, 100%, 78%);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-full);
   }
 
-  .service-content h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .services-cta-banner {
+  .work-body {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
-    background-color: var(--color-bg-dark);
-    color: var(--color-text-light);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-md);
-    align-items: flex-start;
-    margin-top: 0;
+    gap: 0.4rem;
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    flex: 1;
   }
 
-  .services-cta-content h3 {
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-xs);
-    font-size: 1.5rem;
+  .work-sector {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-brand);
   }
 
-  .services-cta-content p {
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
+  .work-body h3 {
+    font-size: 1.3rem;
   }
 
-  .services-cta-banner .btn {
-    flex-shrink: 0;
+  .work-body p {
+    font-size: 0.98rem;
+    flex: 1;
   }
 
-  @media (min-width: 768px) {
-    .services-cta-banner {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-xl);
-    }
+  .work-link {
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-brand);
   }
 
-  /* Web Services Secondary Panel */
-  .web-services-section {
+  .work-link:hover {
+    color: var(--color-brand-hover);
+  }
+
+  .work-link-muted {
+    color: var(--color-text-muted);
+  }
+
+  /* Packages / quote picker */
+  .packages-section {
     background-color: var(--color-bg-alt);
   }
 
-  .web-services-panel {
-    background-color: var(--color-bg-main);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
+  .picker-step {
+    border: 0;
+    min-width: 0;
+    margin-bottom: var(--spacing-xl);
   }
 
-  @media (min-width: 768px) {
-    .web-services-panel {
-      padding: var(--spacing-xl);
-    }
+  .package-group-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-main);
   }
 
-  .web-services-intro {
-    max-width: 600px;
-    margin-bottom: var(--spacing-lg);
+  .package-group-note {
+    font-weight: 400;
+    color: var(--color-text-muted);
   }
 
-  .web-services-intro h2 {
-    margin-top: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
-  }
-
-  .web-services-grid {
+  .package-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
   }
 
   @media (min-width: 768px) {
-    .web-services-grid {
+    .package-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .package-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-main);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .package-card-featured::before {
+    content: 'Most popular';
+    position: absolute;
+    top: -0.75rem;
+    left: var(--spacing-lg);
+    padding: 0.15rem 0.7rem;
+    border-radius: var(--radius-full);
+    background: var(--color-brand);
+    color: var(--color-text-light);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .package-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: var(--color-text-main);
+    padding-right: 2.5rem;
+  }
+
+  .package-price {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1.1;
+  }
+
+  .package-from,
+  .package-unit {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .package-summary {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+  }
+
+  .package-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .package-features li {
+    position: relative;
+    padding-left: 1.6rem;
+    font-size: 0.97rem;
+    color: var(--color-text-main);
+  }
+
+  .package-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 1rem;
+    height: 1rem;
+    background: var(--color-brand);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  /* Selectable options */
+  .option-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .option-card,
+  .option-chip {
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .option-card:hover,
+  .option-chip:hover {
+    border-color: hsl(222, 60%, 75%);
+  }
+
+  .option-card:has(.option-input:checked),
+  .option-chip:has(.option-input:checked) {
+    border-color: var(--color-brand);
+    background-color: var(--color-brand-light);
+    box-shadow: 0 0 0 1px var(--color-brand);
+  }
+
+  .option-card:has(.option-input:focus-visible),
+  .option-chip:has(.option-input:focus-visible) {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+
+  .option-check {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    background: var(--color-bg-main);
+    transition: all var(--transition-fast);
+  }
+
+  .option-card .option-check {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+  }
+
+  .option-check-box {
+    border-radius: 6px;
+  }
+
+  .option-input:checked + .option-check {
+    border-color: var(--color-brand);
+    background: var(--color-brand) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 70% no-repeat;
+  }
+
+  .option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+  }
+
+  .option-chip {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1.1rem;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-main);
+    color: var(--color-text-main);
+    font-size: 0.97rem;
+    line-height: 1.4;
+  }
+
+  .option-chip strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .option-chip-note {
+    color: var(--color-text-muted);
+  }
+
+  .option-chip-box > span:last-child {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .extras-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  @media (min-width: 768px) {
+    .extras-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .extras-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .web-service-card {
-    border-top: 2px solid var(--color-border);
-    padding-top: var(--spacing-md);
+  /* Estimate bar */
+  .picker-summary {
+    position: sticky;
+    bottom: var(--spacing-sm);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-dark);
+    box-shadow: var(--shadow-xl);
   }
 
-  .web-service-card h4 {
-    font-size: 1.1rem;
-    margin-bottom: var(--spacing-xs);
+  .picker-summary-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
   }
 
-  .web-service-card p {
+  .picker-estimate {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-text-light);
+  }
+
+  .picker-detail {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  @media (max-width: 767px) {
+    .picker-summary {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0.85rem;
+    }
+
+    .picker-estimate {
+      font-size: 0.95rem;
+    }
+
+    .picker-detail {
+      display: none;
+    }
+
+    .picker-summary .btn {
+      flex-shrink: 0;
+      padding: 0.65rem 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .picker-summary {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .picker-summary .btn {
+      flex-shrink: 0;
+    }
+  }
+
+  /* Selections carried into the contact form */
+  .form-selections {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    background: var(--color-brand-light);
+    border: 1px solid hsl(222, 80%, 88%);
+  }
+
+  .form-selections[hidden] {
+    display: none;
+  }
+
+  .form-selections-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .form-selections-head a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-brand);
+  }
+
+  .form-selections ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
     font-size: 0.95rem;
+    color: var(--color-text-main);
   }
 
-  /* Why Krause IT section */
+  /* How it works */
+  .approach-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  @media (min-width: 768px) {
+    .approach-steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .approach-steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .approach-step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-main);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .approach-step-marker {
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-dark);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--color-text-light);
+  }
+
+  .approach-step h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .approach-step p {
+    font-size: 0.98rem;
+  }
+
+  /* Why Krause IT */
   .why-section {
     background-color: var(--color-bg-dark);
     color: var(--color-text-light);
@@ -732,11 +1179,6 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
-    padding: var(--spacing-lg) 0;
-  }
-
-  .why-heading {
-    max-width: 760px;
   }
 
   .why-heading .badge {
@@ -768,17 +1210,11 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     border-top: 1px solid rgba(255, 255, 255, 0.14);
   }
 
-  .why-point:first-child {
-    padding-top: 0;
-    border-top: 0;
-  }
-
   .why-point-marker {
     font-family: var(--font-display);
     font-size: 0.8rem;
     font-weight: 700;
     color: hsl(213, 100%, 78%);
-    line-height: 1.15;
     padding-top: 0.25rem;
   }
 
@@ -813,26 +1249,15 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
   }
 
   .why-note p {
-    margin: 0;
     font-size: 0.98rem;
     color: rgba(255, 255, 255, 0.74);
   }
 
   @media (min-width: 768px) {
-    .why-panel {
-      padding: var(--spacing-xl) 0;
-    }
-
     .why-points {
       grid-template-columns: repeat(2, 1fr);
       column-gap: var(--spacing-xl);
       row-gap: var(--spacing-lg);
-    }
-
-    .why-point,
-    .why-point:first-child {
-      padding-top: var(--spacing-md);
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
     }
 
     .why-note {
@@ -852,184 +1277,56 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     }
   }
 
-  /* How We Work section */
-  .approach-section {
-    background-color: var(--color-bg-alt);
+  /* FAQ */
+  .faq-container {
+    max-width: 820px;
   }
 
-  .approach-panel {
-    display: block;
-    padding: 0;
+  .faq-list {
+    border-top: 1px solid var(--color-border);
   }
 
-  .approach-heading {
-    max-width: 760px;
-    margin-bottom: var(--spacing-xl);
-  }
-
-  .approach-heading h2 {
-    margin-top: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
-  }
-
-  .approach-steps {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-    align-items: stretch;
-  }
-
-  .approach-step {
-    display: grid;
-    grid-template-columns: 3.25rem 1fr;
-    gap: var(--spacing-md);
-    padding: var(--spacing-lg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    background-color: var(--color-bg-main);
-    box-shadow: var(--shadow-sm);
-    height: 100%;
-  }
-
-  .approach-step-marker {
-    width: 3.25rem;
-    height: 3.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-md);
-    background-color: var(--color-bg-dark);
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--color-text-light);
-    line-height: 1;
-  }
-
-  .approach-step h3 {
-    font-size: 1.35rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .approach-step p {
-    font-size: 1rem;
-  }
-
-  @media (min-width: 768px) {
-    .approach-steps {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-lg);
-    }
-
-  }
-
-  @media (min-width: 992px) {
-    .approach-steps {
-      grid-template-columns: repeat(12, 1fr);
-      align-items: stretch;
-    }
-
-    .approach-step {
-      min-height: 13rem;
-    }
-
-    .approach-step:nth-child(1),
-    .approach-step:nth-child(4) {
-      grid-column: span 5;
-    }
-
-    .approach-step:nth-child(2),
-    .approach-step:nth-child(3) {
-      grid-column: span 7;
-    }
-
-  }
-
-  /* Case Studies styles */
-  .case-studies-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xl);
-  }
-
-  .case-study-item {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-    background-color: var(--color-bg-main);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-  }
-
-  @media (min-width: 992px) {
-    .case-study-item {
-      grid-template-columns: 1fr 1.5fr;
-      padding: var(--spacing-xl);
-      gap: var(--spacing-xl);
-    }
-  }
-
-  .case-study-meta {
+  .faq-item {
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--spacing-md);
   }
 
-  @media (min-width: 992px) {
-    .case-study-meta {
-      border-bottom: none;
-      border-right: 1px solid var(--color-border);
-      padding-bottom: 0;
-      padding-right: var(--spacing-xl);
-    }
-  }
-
-  .case-study-sector {
+  .faq-item summary {
+    position: relative;
+    list-style: none;
+    cursor: pointer;
+    padding: var(--spacing-md) 2.5rem var(--spacing-md) 0;
     font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-brand);
-    display: inline-block;
-    margin-bottom: 0.5rem;
-  }
-
-  .case-study-meta h3 {
-    font-size: 1.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .case-study-client {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
     font-weight: 600;
+    font-size: 1.15rem;
     color: var(--color-text-main);
-    margin-bottom: var(--spacing-sm);
   }
 
-  .case-study-details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  .faq-item summary::-webkit-details-marker {
+    display: none;
   }
 
-  .detail-block h5 {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var(--color-text-main);
-    margin-bottom: 0.25rem;
+  .faq-item summary::after {
+    content: '+';
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--color-brand);
+    transition: transform var(--transition-fast);
   }
 
-  .detail-block p {
-    font-size: 0.95rem;
-    margin: 0;
+  .faq-item[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
   }
 
-  /* Contact section styles */
+  .faq-item p {
+    padding-bottom: var(--spacing-md);
+    max-width: 70ch;
+  }
+
+  /* Contact */
   .contact-section {
     background-color: var(--color-bg-alt);
   }
@@ -1039,7 +1336,6 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
     align-items: start;
-    padding: 0;
   }
 
   @media (min-width: 992px) {
@@ -1052,11 +1348,6 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     max-width: 450px;
   }
 
-  .contact-info .badge {
-    background-color: var(--color-brand-light);
-    color: var(--color-brand);
-  }
-
   .contact-info h2 {
     margin-top: var(--spacing-xs);
     margin-bottom: var(--spacing-md);
@@ -1066,7 +1357,6 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     margin-top: var(--spacing-lg);
     display: flex;
     flex-direction: column;
-    gap: 0;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
   }
@@ -1118,7 +1408,11 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
 
   .contact-form-intro p {
     font-size: 0.98rem;
-    margin: 0;
+  }
+
+  .form-optional {
+    font-weight: 400;
+    color: var(--color-text-muted);
   }
 
   .contact-form .btn-block {
@@ -1129,7 +1423,6 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
   .form-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0;
   }
 
   @media (min-width: 768px) {
@@ -1139,3 +1432,100 @@ const caseStudies = (await getCollection('case-studies')).filter((study) => !stu
     }
   }
 </style>
+
+<script>
+  const picker = document.querySelector<HTMLElement>('[data-picker]');
+  const estimateEl = document.querySelector<HTMLElement>('[data-picker-estimate]');
+  const detailEl = document.querySelector<HTMLElement>('[data-picker-detail]');
+  const continueBtn = document.querySelector<HTMLAnchorElement>('[data-picker-continue]');
+  const selectionsBox = document.querySelector<HTMLElement>('[data-selections]');
+  const selectionsList = document.querySelector<HTMLUListElement>('[data-selections-list]');
+  const selectionsInput = document.querySelector<HTMLInputElement>('[data-selections-input]');
+  const needSelect = document.querySelector<HTMLSelectElement>('#need');
+
+  const money = (n: number) => `$${n.toLocaleString('en-AU')}`;
+  const checked = (name: string) =>
+    Array.from(picker?.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`) ?? []);
+
+  const describe = (input: HTMLInputElement) => {
+    const amount = Number(input.dataset.amount);
+    if (!amount) return input.dataset.label ?? input.value;
+    return `${input.dataset.label} (from ${money(amount)}${input.hasAttribute('data-monthly') ? '/month' : ''})`;
+  };
+
+  const update = () => {
+    const [site] = checked('pick-site');
+    const [plan] = checked('pick-plan');
+    const extras = checked('pick-extra');
+
+    const oneOff = Number(site?.dataset.amount) || 0;
+    const monthly = Number(plan?.dataset.amount) || 0;
+    const anything = Boolean(site || plan || extras.length);
+
+    // Estimate line
+    const parts = [oneOff && `${money(oneOff)} one-off`, monthly && `${money(monthly)}/month`].filter(Boolean);
+    if (estimateEl) {
+      estimateEl.textContent = parts.length
+        ? `Estimate: from ${parts.join(' + ')}`
+        : anything
+          ? "We'll recommend the right options"
+          : 'Choose your options to see an estimate';
+    }
+
+    const lines = [
+      site && `Website: ${describe(site)}`,
+      plan && `Ongoing: ${describe(plan)}`,
+      extras.length > 0 && `Extras: ${extras.map((e) => e.dataset.label).join(', ')}`,
+    ].filter((line): line is string => Boolean(line));
+
+    if (detailEl) {
+      detailEl.textContent = extras.some((e) => e.value !== 'unsure')
+        ? 'Extras are quoted separately. Prices in AUD.'
+        : 'Prices in AUD. Every quote is confirmed before work starts.';
+    }
+
+    // Carry selections into the contact form
+    if (selectionsInput) selectionsInput.value = lines.join('\n');
+    if (selectionsList) {
+      selectionsList.replaceChildren(
+        ...lines.map((line) => {
+          const li = document.createElement('li');
+          li.textContent = line;
+          return li;
+        }),
+      );
+    }
+    if (selectionsBox) selectionsBox.hidden = lines.length === 0;
+  };
+
+  picker?.addEventListener('change', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.name === 'pick-extra' && target.checked) {
+      // "I don't know" and specific extras are mutually exclusive
+      const exclusive = target.hasAttribute('data-exclusive');
+      checked('pick-extra').forEach((input) => {
+        if (input !== target && input.hasAttribute('data-exclusive') !== exclusive) input.checked = false;
+      });
+    }
+    update();
+  });
+
+  continueBtn?.addEventListener('click', () => {
+    update();
+    const [site] = checked('pick-site');
+    const [plan] = checked('pick-plan');
+    if (needSelect && !needSelect.value) {
+      if (site) needSelect.value = 'New website';
+      else if (plan && plan.value !== 'none') needSelect.value = 'Hosting, domain or email';
+    }
+    // Let the anchor scroll to the form, then put the cursor in the first empty field
+    window.setTimeout(() => {
+      const firstEmpty = Array.from(
+        document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('#contact .form-control[required]'),
+      ).find((field) => !field.value);
+      firstEmpty?.focus({ preventScroll: true });
+    }, 400);
+  });
+
+  update();
+</script>

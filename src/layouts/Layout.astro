@@ -1,19 +1,28 @@
 ---
 import BaseSEO from '../components/BaseSEO.astro';
+import type { ComponentProps } from 'astro/types';
+import '@fontsource-variable/inter/opsz.css';
+import '@fontsource-variable/outfit';
 import '../styles/global.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2?url';
+import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
+  offers?: ComponentProps<typeof BaseSEO>['offers'];
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex, offers } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
   <head>
-    <BaseSEO title={title} description={description} />
+    <BaseSEO title={title} description={description} noindex={noindex} offers={offers} />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <style>
       /* Layout specific styles */
       header {
@@ -59,6 +68,7 @@ const { title, description } = Astro.props;
       }
 
       .nav-link {
+        white-space: nowrap;
         font-family: var(--font-display);
         font-size: 0.95rem;
         font-weight: 500;
@@ -119,7 +129,7 @@ const { title, description } = Astro.props;
         transition: transform var(--transition-normal), opacity var(--transition-normal);
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 1024px) {
         .nav-toggle-button {
           display: none;
         }
@@ -131,7 +141,7 @@ const { title, description } = Astro.props;
         }
       }
 
-      @media (max-width: 767px) {
+      @media (max-width: 1023px) {
         nav {
           position: fixed;
           top: 0;
@@ -267,7 +277,19 @@ const { title, description } = Astro.props;
         }
       }
 
-      .footer-link-group h4 {
+      .footer-brand .footer-it-note {
+        margin-top: var(--spacing-sm);
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .footer-it-note a {
+        color: hsl(213, 100%, 78%);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .footer-link-heading {
         color: var(--color-text-light);
         font-family: var(--font-display);
         font-size: 0.9rem;
@@ -281,10 +303,12 @@ const { title, description } = Astro.props;
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-xs);
+        gap: 0.15rem;
       }
 
       .footer-link {
+        display: inline-block;
+        padding: 0.35rem 0;
         font-size: 0.95rem;
         color: rgba(255, 255, 255, 0.6);
       }
@@ -321,8 +345,8 @@ const { title, description } = Astro.props;
     <a class="skip-link" href="#content">Skip to content</a>
     <header>
       <div class="container header-container">
-        <a href="#top" class="logo" aria-label="Back to top">
-          <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="header-logo-img" height="36" />
+        <a href="/#top" class="logo" aria-label="Krause IT — back to top">
+          <img src="/KrauseIT_Logo.webp" alt="Krause IT" class="header-logo-img" width="140" height="36" />
         </a>
 
         <button
@@ -342,15 +366,17 @@ const { title, description } = Astro.props;
 
         <nav id="primary-navigation" aria-label="Primary navigation">
           <ul class="nav-links">
-            <li><a href="#consulting" class="nav-link">Consulting</a></li>
-            <li><a href="#web-services" class="nav-link">Web Services</a></li>
-            <li><a href="#approach" class="nav-link">Approach</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="/#work" class="nav-link">Work</a></li>
+            <li><a href="/#packages" class="nav-link">Packages</a></li>
+            <li><a href="/#process" class="nav-link">How it works</a></li>
+            <li><a href="/#why" class="nav-link">Why Krause IT</a></li>
+            <li><a href="/#faq" class="nav-link">FAQ</a></li>
+            <li><a href="/#contact" class="nav-link">Contact</a></li>
           </ul>
-          <a href="#contact" class="btn btn-primary btn-sm header-cta-mobile">Discuss your project</a>
+          <a href="/#contact" class="btn btn-primary btn-sm header-cta-mobile">Get a quote</a>
         </nav>
 
-        <a href="#contact" class="btn btn-primary header-cta">Discuss your project</a>
+        <a href="/#contact" class="btn btn-primary header-cta">Get a quote</a>
       </div>
     </header>
 
@@ -363,29 +389,32 @@ const { title, description } = Astro.props;
         <div class="footer-top">
           <div class="footer-brand">
             <div class="footer-logo">
-              <img src="/KrauseIT_Logo_Transparent.png" alt="Krause IT" class="footer-logo-img" height="36" />
+              <img src="/KrauseIT_Logo.webp" alt="Krause IT" class="footer-logo-img" width="140" height="36" loading="lazy" />
             </div>
-            <p>Delivering complex IT infrastructure, network, and systems change for schools and businesses across Australia.</p>
+            <p>Website design, hosting and domain management for small businesses, sole traders and community groups across Australia.</p>
+            <p class="footer-it-note">Bigger IT problem? Krause IT takes on the occasional IT project. <a href="/#contact">Get in touch</a>.</p>
           </div>
           <div class="footer-links">
             <div class="footer-link-group">
-              <h4>Services</h4>
+              <p class="footer-link-heading">Services</p>
               <ul class="footer-link-list">
-                <li><a href="#consulting" class="footer-link">Consulting</a></li>
-                <li><a href="#web-services" class="footer-link">Web Hosting & Design</a></li>
+                <li><a href="/#packages" class="footer-link">Packages</a></li>
+                <li><a href="/#work" class="footer-link">Recent work</a></li>
               </ul>
             </div>
             <div class="footer-link-group">
-              <h4>Company</h4>
+              <p class="footer-link-heading">Company</p>
               <ul class="footer-link-list">
-                <li><a href="#approach" class="footer-link">Our Approach</a></li>
-                <li><a href="#contact" class="footer-link">Contact</a></li>
+                <li><a href="/#process" class="footer-link">How it works</a></li>
+                <li><a href="/#why" class="footer-link">Why Krause IT</a></li>
+                <li><a href="/#faq" class="footer-link">FAQ</a></li>
+                <li><a href="/#contact" class="footer-link">Contact</a></li>
               </ul>
             </div>
           </div>
         </div>
         <div class="footer-bottom">
-          <p class="footer-geo">Australia-wide remote support. On-site across Perth and the South West.</p>
+          <p class="footer-geo">Fully remote. Websites for clients Australia-wide.</p>
           <p>&copy; {new Date().getFullYear()} Krause IT. All rights reserved.</p>
         </div>
       </div>
@@ -394,7 +423,7 @@ const { title, description } = Astro.props;
       const toggle = document.querySelector('#nav-toggle');
       const navigation = document.querySelector('#primary-navigation');
       const overlay = document.querySelector('.nav-overlay');
-      const mobileMenu = window.matchMedia('(max-width: 767px)');
+      const mobileMenu = window.matchMedia('(max-width: 1023px)');
 
       const setNavigationState = (isOpen) => {
         document.body.classList.toggle('nav-open', isOpen);

@@ -17,7 +17,7 @@ const work = [
   {
     name: 'Dana Krause Sleep Coaching',
     sector: 'Sole trader · Coaching',
-    blurb: 'A calm, warm site for a sleep coach supporting families with children aged 0–4, built around booking a free consult.',
+    blurb: 'A calm, warm site for a sleep coach supporting families with children aged 0–4, with a custom client portal: families who buy a package get their own dashboard, managed by Dana from WordPress.',
     url: 'https://danakrause.com',
     image: '/work/danakrause.com.webp',
   },
@@ -93,6 +93,7 @@ const extras = [
   { id: 'dns', name: 'Connect my existing domain', summary: 'DNS set up for a domain you already own' },
   { id: 'migrate', name: 'Move my existing site', summary: 'Bring your current website across' },
   { id: 'pages', name: 'Extra pages', summary: 'More pages than your package includes' },
+  { id: 'custom', name: 'Custom feature or plugin', summary: 'Client portals, booking workflows and more' },
 ];
 
 const offers = [
@@ -105,7 +106,7 @@ const offers = [
 const faqs = [
   {
     q: 'Who owns my website?',
-    a: 'You do. Once your site is paid for, the website and its content belong to you, and your domain is yours too. If you ever want to move to another host or developer, you get everything you need to take it with you. No lock-in contracts, no exit fees.',
+    a: 'You do. Once your site is paid for, the website and its content belong to you, and your domain is yours too. If you ever want to move to another host or developer, you get everything you need to take it with you. No lock-in contracts, no exit fees. For custom features like client portals, Krause IT keeps ownership of the plugin code and gives you a permanent licence to use it, so it keeps working on your site wherever it is hosted.',
   },
   {
     q: 'Do I have to host with Krause IT?',
@@ -324,6 +325,36 @@ const faqs = [
           </div>
           <a href="#contact" class="btn btn-primary" data-picker-continue>Continue →</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom development -->
+  <section id="custom" class="section custom-section">
+    <div class="container">
+      <div class="custom-panel">
+        <div class="custom-intro">
+          <span class="badge badge-brand">Custom development</span>
+          <h2>Need something custom?</h2>
+          <p class="section-intro">When an off-the-shelf plugin doesn't fit how you work, Krause IT can build a custom WordPress plugin around your business.</p>
+          <p class="custom-example">For example: Dana Krause Sleep Coaching's client portal gives every family who buys a package their own dashboard, managed by Dana from the WordPress admin.</p>
+          <a href="#contact" class="btn btn-primary">Talk about your idea</a>
+        </div>
+        <ul class="custom-list">
+          <li>
+            <h3>Client portals & member dashboards</h3>
+            <p>Give paying customers their own login, resources and progress, all managed by you.</p>
+          </li>
+          <li>
+            <h3>Booking & enquiry workflows</h3>
+            <p>Forms, bookings and payments that follow the way your business actually runs.</p>
+          </li>
+          <li>
+            <h3>Admin tools built for you</h3>
+            <p>Simple screens in WordPress for the jobs you do every week, without the clutter.</p>
+          </li>
+        </ul>
+        <p class="custom-note">Custom work is quoted per project with a written scope. You get a permanent licence to use your plugin, while Krause IT keeps ownership of the code.</p>
       </div>
     </div>
   </section>
@@ -1115,7 +1146,85 @@ const faqs = [
     color: var(--color-text-main);
   }
 
+  /* Custom development */
+  .custom-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.07) 0%, transparent 55%),
+      var(--color-bg-main);
+    box-shadow: var(--shadow-md);
+  }
+
+  .custom-intro h2 {
+    margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .custom-example {
+    margin: var(--spacing-md) 0 var(--spacing-lg);
+    padding-left: var(--spacing-sm);
+    border-left: 3px solid var(--color-brand);
+    font-size: 1rem;
+  }
+
+  .custom-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .custom-list li {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+  }
+
+  .custom-list h3 {
+    font-size: 1.15rem;
+    letter-spacing: normal;
+    margin-bottom: 0.3rem;
+  }
+
+  .custom-list p {
+    font-size: 0.97rem;
+  }
+
+  .custom-note {
+    font-size: 0.92rem;
+  }
+
+  @media (min-width: 768px) {
+    .custom-panel {
+      padding: var(--spacing-xl);
+    }
+  }
+
+  @media (min-width: 992px) {
+    .custom-panel {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      align-items: start;
+    }
+
+    .custom-note {
+      grid-column: 1 / -1;
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--color-border);
+    }
+  }
+
   /* How it works */
+  .approach-section {
+    background-color: var(--color-bg-alt);
+  }
+
   .approach-steps {
     list-style: none;
     display: grid;

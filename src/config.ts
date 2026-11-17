@@ -8,4 +8,4 @@ export const business = {
 
 // Google Analytics 4 Measurement ID, e.g. 'G-ABC123XYZ9'.
 // Leave empty to disable analytics entirely (no script is loaded).
-export const GA_MEASUREMENT_ID = '';
+export const GA_MEASUREMENT_ID = 'G-2G0DPRKLN3';

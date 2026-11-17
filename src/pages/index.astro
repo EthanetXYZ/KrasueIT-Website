@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 const pricing = {
   starter: 750,   // one-page site
   business: 1500, // up to 5 pages
-  hosting: 30,    // per month, required
+  hosting: 35,    // per month, optional; higher for larger or busier sites
   care: 60,       // per month, optional (includes hosting)
 };
 // ─────────────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ const plans = [
     name: 'Hosting',
     price: fmt(pricing.hosting),
     unit: '/month',
-    summary: 'Keeps your site online, secure and backed up, so you never have to think about it.',
+    summary: 'Keeps your site online, secure and backed up, so you never have to think about it. Larger or busier sites are quoted to suit.',
     features: ['Australian-based hosting', 'Free SSL certificate', 'Daily backups', 'Uptime monitoring', 'Security and software updates', 'Domain and DNS management'],
   },
   {
@@ -114,7 +114,7 @@ const faqs = [
   },
   {
     q: "What's the difference between Hosting and the Care plan?",
-    a: 'Hosting keeps your site running and secure. The Care plan includes everything in Hosting, plus up to 30 minutes of content changes each month, such as new photos, updated prices or a new announcement, and priority support.',
+    a: 'Hosting keeps your site running and secure. Hosting starts from the listed price, and larger or high-traffic sites are quoted based on what they need. The Care plan includes everything in Hosting, plus up to 30 minutes of content changes each month, such as new photos, updated prices or a new announcement, and priority support.',
   },
   {
     q: 'I already have a domain name. Can I keep it?',

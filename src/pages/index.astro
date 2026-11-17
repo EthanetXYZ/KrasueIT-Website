@@ -539,6 +539,7 @@ const faqs = [
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">Send enquiry</button>
+            <p class="form-privacy">We'll only use your details to reply to your enquiry. See our <a href="/privacy/">privacy policy</a>.</p>
           </form>
         </div>
       </div>
@@ -1517,6 +1518,18 @@ const faqs = [
 
   .contact-form-intro p {
     font-size: 0.98rem;
+  }
+
+  .form-privacy {
+    margin-top: var(--spacing-sm);
+    font-size: 0.88rem;
+    text-align: center;
+  }
+
+  .form-privacy a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .form-optional {

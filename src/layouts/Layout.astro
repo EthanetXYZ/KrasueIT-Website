@@ -6,6 +6,7 @@ import '@fontsource-variable/outfit';
 import '../styles/global.css';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2?url';
 import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
+import { business, GA_MEASUREMENT_ID } from '../config';
 
 interface Props {
   title?: string;
@@ -21,6 +22,17 @@ const { title, description, noindex, offers } = Astro.props;
 <html lang="en-AU">
   <head>
     <BaseSEO title={title} description={description} noindex={noindex} offers={offers} />
+    {GA_MEASUREMENT_ID && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', GA_MEASUREMENT_ID);
+        </script>
+      </>
+    )}
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={outfitLatin} as="font" type="font/woff2" crossorigin />
     <style>
@@ -335,6 +347,16 @@ const { title, description, noindex, offers } = Astro.props;
         }
       }
 
+      .footer-legal a {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .footer-legal a:hover {
+        color: var(--color-text-light);
+      }
+
       .footer-geo {
         font-style: normal;
         color: rgba(255, 255, 255, 0.5);
@@ -415,7 +437,9 @@ const { title, description, noindex, offers } = Astro.props;
         </div>
         <div class="footer-bottom">
           <p class="footer-geo">Fully remote. Websites for clients Australia-wide.</p>
-          <p>&copy; {new Date().getFullYear()} Krause IT. All rights reserved.</p>
+          <p class="footer-legal">
+            &copy; {new Date().getFullYear()} {business.name} · ABN {business.abn} · <a href="/privacy/">Privacy policy</a>
+          </p>
         </div>
       </div>
     </footer>

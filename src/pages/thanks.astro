@@ -12,3 +12,8 @@ import SimpleMessage from '../components/SimpleMessage.astro';
     <p>We'll review what you've sent and get back to you by email. If it's urgent, email us directly.</p>
   </SimpleMessage>
 </Layout>
+
+<script is:inline>
+  // Record a completed enquiry as a lead in Google Analytics (only runs when analytics is enabled)
+  if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead');
+</script>

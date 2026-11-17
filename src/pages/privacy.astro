@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { business } from '../config';
+
+const updated = '17 November 2026';
+---
+
+<Layout
+  title="Privacy Policy — Krause IT"
+  description="How Krause IT collects, uses and protects personal information from website visitors, enquiries and clients."
+>
+  <section class="section">
+    <div class="container prose">
+      <span class="badge badge-brand">Privacy</span>
+      <h1>Privacy policy</h1>
+      <p class="prose-meta">Last updated {updated}</p>
+
+      <p>
+        {business.name} (ABN {business.abn}) builds and hosts websites for small businesses and community groups.
+        This policy explains what personal information we collect through this website and when we work together,
+        how we use it, and the choices you have. We aim to handle personal information in line with the Australian
+        Privacy Principles.
+      </p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li><strong>When you send an enquiry:</strong> your name, email address, business or organisation name (if given), what you need, your message, and any options you selected in the quote builder.</li>
+        <li><strong>When you become a client:</strong> the contact, billing and project details needed to build, host and support your website, including access details for your domain, hosting or website where you provide them.</li>
+        <li><strong>When you browse this site:</strong> anonymous usage information collected by Google Analytics, described below.</li>
+      </ul>
+      <p>We don't ask for sensitive information, and we ask that you don't include it in your enquiry.</p>
+
+      <h2>How we use it</h2>
+      <ul>
+        <li>To reply to your enquiry and prepare a quote.</li>
+        <li>To deliver, host and support the services you've engaged us for, and to invoice for them.</li>
+        <li>To understand how visitors use this website so we can improve it.</li>
+      </ul>
+      <p>We don't sell your information, rent it out, or use it for unrelated marketing.</p>
+
+      <h2>Where it's stored and who we share it with</h2>
+      <p>We use a small number of trusted service providers to run this website and our business:</p>
+      <ul>
+        <li><strong>Netlify</strong> hosts this website and receives contact form submissions. Netlify stores data on servers that may be located outside Australia, including in the United States.</li>
+        <li><strong>Microsoft 365</strong> provides our email, including notifications of new enquiries.</li>
+        <li><strong>Google Analytics</strong> measures website usage. Google may process this data outside Australia.</li>
+      </ul>
+      <p>
+        These providers handle information on our behalf under their own privacy and security commitments.
+        We only otherwise disclose personal information if you agree or if the law requires it.
+      </p>
+
+      <h2>Cookies and analytics</h2>
+      <p>
+        This website uses Google Analytics, which sets cookies to measure things like how many people visit,
+        which pages they view and roughly where they're visiting from. It doesn't tell us who you are, and Google
+        Analytics 4 does not store visitors' IP addresses. You can block or delete cookies in your browser settings,
+        or opt out using Google's
+        <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Analytics opt-out browser add-on</a>.
+        This site does not use advertising or remarketing cookies.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        We keep enquiries for as long as needed to respond and follow up. Client records are kept while we work
+        together and afterwards for as long as required for tax and business record-keeping. When information is
+        no longer needed, we delete it.
+      </p>
+
+      <h2>Keeping it secure</h2>
+      <p>
+        We take reasonable steps to protect personal information from misuse, loss and unauthorised access,
+        including secure (HTTPS) connections, access controls and reputable service providers.
+      </p>
+
+      <h2>Accessing or correcting your information</h2>
+      <p>
+        You can ask for a copy of the personal information we hold about you, ask us to correct it, or ask us to
+        delete it, by emailing <a href={`mailto:${business.email}`}>{business.email}</a>. We'll respond within a
+        reasonable time.
+      </p>
+
+      <h2>Questions and complaints</h2>
+      <p>
+        If you have a question or concern about how we've handled your information, please email
+        <a href={`mailto:${business.email}`}>{business.email}</a> and we'll do our best to resolve it.
+        If you're not satisfied with our response, you can contact the
+        <a href="https://www.oaic.gov.au/privacy/privacy-complaints" target="_blank" rel="noopener">Office of the Australian Information Commissioner (OAIC)</a>.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy from time to time. The latest version will always be on this page.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .prose {
+    max-width: 760px;
+  }
+
+  .prose h1 {
+    margin: var(--spacing-sm) 0 var(--spacing-xs);
+    font-size: clamp(2.25rem, 4vw, 3rem);
+  }
+
+  .prose-meta {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .prose h2 {
+    font-size: 1.4rem;
+    letter-spacing: normal;
+    margin: var(--spacing-lg) 0 var(--spacing-sm);
+  }
+
+  .prose p,
+  .prose li {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+  }
+
+  .prose p + p {
+    margin-top: var(--spacing-sm);
+  }
+
+  .prose ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .prose strong {
+    color: var(--color-text-main);
+  }
+
+  .prose a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

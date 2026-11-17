@@ -2,12 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 
 // ── Edit prices here ─────────────────────────────────────────────
-// All prices are AUD "from" prices; they feed the packages section and structured data.
+// All prices are AUD "from" prices, excluding GST; they feed the packages section and structured data.
 const pricing = {
   starter: 750,   // one-page site
   business: 1500, // up to 5 pages
   hosting: 35,    // per month, optional; higher for larger or busier sites
-  care: 60,       // per month, optional (includes hosting)
+  care: 65,       // per month, optional (includes hosting)
 };
 // ─────────────────────────────────────────────────────────────────
 
@@ -241,7 +241,7 @@ const faqs = [
       <div class="section-heading">
         <span class="badge badge-brand">Packages</span>
         <h2>Build your quote</h2>
-        <p class="section-intro">Pick a website, an optional monthly plan and any extras. Not sure? Choose "I don't know" and we'll recommend what fits. The site is yours either way.</p>
+        <p class="section-intro">Pick a website, an optional monthly plan and any extras. Not sure? Choose "I don't know" and we'll recommend what fits. The site is yours either way. All prices are in AUD and exclude GST.</p>
       </div>
 
       <div class="picker" data-picker>
@@ -253,7 +253,7 @@ const faqs = [
                 <input type="radio" name="pick-site" value={pkg.id} class="option-input" data-label={pkg.name} data-amount={pkg.amount} />
                 <span class="option-check" aria-hidden="true"></span>
                 <span class="package-name">{pkg.name}</span>
-                <span class="package-price"><span class="package-from">from</span> {pkg.price} <span class="package-unit">{pkg.unit}</span></span>
+                <span class="package-price"><span class="package-from">from</span> {pkg.price} <span class="package-unit">{pkg.unit} ex GST</span></span>
                 <span class="package-summary">{pkg.summary}</span>
                 <ul class="package-features">
                   {pkg.features.map((f) => <li>{f}</li>)}
@@ -278,7 +278,7 @@ const faqs = [
                 <input type="radio" name="pick-plan" value={plan.id} class="option-input" data-label={plan.name} data-amount={plan.amount} data-monthly />
                 <span class="option-check" aria-hidden="true"></span>
                 <span class="package-name">{plan.name}</span>
-                <span class="package-price"><span class="package-from">from</span> {plan.price}<span class="package-unit">{plan.unit}</span></span>
+                <span class="package-price"><span class="package-from">from</span> {plan.price}<span class="package-unit">{plan.unit} ex GST</span></span>
                 <span class="package-summary">{plan.summary}</span>
                 <ul class="package-features">
                   {plan.features.map((f) => <li>{f}</li>)}
@@ -321,7 +321,7 @@ const faqs = [
         <div class="picker-summary">
           <div class="picker-summary-text" aria-live="polite">
             <span class="picker-estimate" data-picker-estimate>Choose your options to see an estimate</span>
-            <span class="picker-detail" data-picker-detail>Prices in AUD. Every quote is confirmed before work starts.</span>
+            <span class="picker-detail" data-picker-detail>Prices in AUD, ex GST. Every quote is confirmed before work starts.</span>
           </div>
           <a href="#contact" class="btn btn-primary" data-picker-continue>Continue →</a>
         </div>
@@ -1572,7 +1572,7 @@ const faqs = [
   const describe = (input: HTMLInputElement) => {
     const amount = Number(input.dataset.amount);
     if (!amount) return input.dataset.label ?? input.value;
-    return `${input.dataset.label} (from ${money(amount)}${input.hasAttribute('data-monthly') ? '/month' : ''})`;
+    return `${input.dataset.label} (from ${money(amount)}${input.hasAttribute('data-monthly') ? '/month' : ''} ex GST)`;
   };
 
   const update = () => {
@@ -1588,7 +1588,7 @@ const faqs = [
     const parts = [oneOff && `${money(oneOff)} one-off`, monthly && `${money(monthly)}/month`].filter(Boolean);
     if (estimateEl) {
       estimateEl.textContent = parts.length
-        ? `Estimate: from ${parts.join(' + ')}`
+        ? `Estimate: from ${parts.join(' + ')} ex GST`
         : anything
           ? "We'll recommend the right options"
           : 'Choose your options to see an estimate';
@@ -1602,8 +1602,8 @@ const faqs = [
 
     if (detailEl) {
       detailEl.textContent = extras.some((e) => e.value !== 'unsure')
-        ? 'Extras are quoted separately. Prices in AUD.'
-        : 'Prices in AUD. Every quote is confirmed before work starts.';
+        ? 'Extras are quoted separately. Prices in AUD, ex GST.'
+        : 'Prices in AUD, ex GST. Every quote is confirmed before work starts.';
     }
 
     // Carry selections into the contact form

@@ -79,6 +79,7 @@ const structuredData = {
               "@type": offer.unit ? "UnitPriceSpecification" : "PriceSpecification",
               minPrice: offer.price,
               priceCurrency: "AUD",
+              valueAddedTaxIncluded: false,
               ...(offer.unit && { unitCode: offer.unit })
             }
           }))
